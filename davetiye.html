@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Düğün Davetiyesi</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #fefefe;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    #message {
+      opacity: 0;
+      font-size: 24px;
+      transition: opacity 1s ease;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="message">🌸 Elif & Batuhan'ın Düğününe Davetlisiniz! 🌸</div>
+
+  <script>
+    let revealed = false;
+
+    function handleMotion(event) {
+      const acc = event.accelerationIncludingGravity;
+      const totalForce = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+
+      if (totalForce > 20 && !revealed) {
+        document.getElementById('message').style.opacity = 1;
+        revealed = true;
+        window.removeEventListener('devicemotion', handleMotion);
+      }
+    }
+
+    // İzin isteme (iOS için gerekli)
+    function requestPermission() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission().then(permissionState => {
+          if (permissionState === 'granted') {
+            window.addEventListener('devicemotion', handleMotion);
+          } else {
+            alert('Sensör izni reddedildi.');
+          }
+        }).catch(console.error);
+      } else {
+        // Android veya izin istemeyen tarayıcılar
+        window.addEventListener('devicemotion', handleMotion);
+      }
+    }
+
+    // Sayfa tıklanınca izin iste
+    document.body.addEventListener('click', requestPermission);
+  </script>
+</body>
+</html>
